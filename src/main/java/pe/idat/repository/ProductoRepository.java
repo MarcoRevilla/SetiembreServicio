@@ -9,5 +9,5 @@ import pe.idat.model.Producto;
 @Repository
 public interface ProductoRepository  extends JpaRepository<Producto, Integer>{
 	
-	
+	//pruevas
 }
