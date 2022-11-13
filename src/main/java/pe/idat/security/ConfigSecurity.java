@@ -14,6 +14,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 //import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 //import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 //import org.springframework.security.web.SecurityFilterChain;
@@ -24,28 +26,26 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ConfigSecurity extends WebSecurityConfigurerAdapter{
 	
 	@Autowired
 	private UserDetailService service;
-	@Autowired
-	private TokenFilter filter;
-	@Autowired
-	private EntryPoint entrypoint;
 	
-	@Override
-	public AuthenticationManager authenticationManagerBean() throws Exception {
-		// TODO Auto-generated method stub
-		return super.authenticationManagerBean();
-	}
-
+	
+	//@Override
+	//public AuthenticationManager authenticationManagerBean() throws Exception {
+	//	// TODO Auto-generated method stub
+	//	return super.authenticationManagerBean();
+	//}
+	
+	@Bean
 	@Override
 	protected AuthenticationManager authenticationManager() throws Exception {
 		// TODO Auto-generated method stub
 		return super.authenticationManager();
 	}
-
+	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 //		auth.inMemoryAuthentication().withUser("profesor").password(encriptado().encode("123")).roles("ADMIN");
@@ -55,61 +55,23 @@ public class ConfigSecurity extends WebSecurityConfigurerAdapter{
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-//		http.authorizeRequests()
-//		.antMatchers("/producto/v1/listar").permitAll()
-//		.antMatchers("/producto/v1/**").access("hasRole('ADMIN')")
-//		.and()
-//		.httpBasic()
-//		.and()
-//		.csrf().disable();
-		
-		http.authorizeRequests()
-		.antMatchers("/crearToken").permitAll()
-		.anyRequest()
-		.authenticated()
-		.and()
-		.exceptionHandling()
-		.authenticationEntryPoint(entrypoint)
-		.and()
-		.sessionManagement()
-		.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-		.and()
-		.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
-		.csrf().disable();
+
+		http.anonymous().disable();
 	}
 	
 	
 	
-	//@Bean
-	//public UserDetailsService userDetail() {
-	//	
-	//	InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-	//	manager.createUser(
-	//			User.withUsername("profesor")
-	//			.password(encriptado().encode("123"))
-	//			.roles("ADMIN")
-	//			.build());
-	//	
-	//	return manager;
-	//	
-	//}
+	
 	
 	@Bean
 	public PasswordEncoder encriptado() {
 		return new BCryptPasswordEncoder();
 	}
-	//
-	//@Bean
-	//public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-	//	
-	//	http.authorizeRequests()
-	//		.antMatchers("/producto/v1/*").access("hasRole('ADMIN')")
-	//		.and()
-	//		.httpBasic()
-	//		.and()
-	//		.csrf().disable();
-	//	
-	//	return http.build();
-	//}
+	
+	@Bean
+	public TokenStore tokenStore() {
+		return new InMemoryTokenStore();
+	}
+
 	
 }
