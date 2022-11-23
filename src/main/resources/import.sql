@@ -1,0 +1,1 @@
+insert into usuarios(usuario, cantrasenia, rol)values ('profesor','$2a$12$X31KK0tVShvpNLuCFva6QeRWxHveDO8AskK6z7KPTopuXswPImHHW','ROLE_PROFESOR')
